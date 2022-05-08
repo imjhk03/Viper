@@ -38,6 +38,9 @@ class TripDetailPresenter: ObservableObject {
     @Published var tripName: String = "No name"
     let setTripName: Binding<String>
     
+    @Published var distanceLabel: String = "Calculationg..."
+    @Published var waypoints: [Waypoint] = []
+    
     init(interactor: TripDetailInteractor) {
         self.interactor = interactor
         
@@ -50,6 +53,16 @@ class TripDetailPresenter: ObservableObject {
         // 2 Assigns the trip name from the interactor’s publisher to the tripName property of the presenter. This keeps the value synchronized.
         interactor.tripNamePublisher
             .assign(to: \.tripName, on: self)
+            .store(in: &cancellables)
+        
+        interactor.$totalDistance
+            .map { "Total Distance: " + MeasurementFormatter().string(from: $0) }
+            .replaceNil(with: "Calculationg...")
+            .assign(to: \.distanceLabel, on: self)
+            .store(in: &cancellables)
+        
+        interactor.$waypoints
+            .assign(to: \.waypoints, on: self)
             .store(in: &cancellables)
     }
     
