@@ -38,6 +38,20 @@ struct TripDetailView: View {
                 .padding([.horizontal])
             presenter.makeMapView()
             Text(presenter.distanceLabel)
+            
+            HStack {
+                Spacer()
+                EditButton()
+                Button(action: presenter.addWaypoint) {
+                    Text("Add")
+                }
+            }
+            .padding([.horizontal])
+            List {
+                ForEach(presenter.waypoints, content: presenter.cell)
+                    .onMove(perform: presenter.didMoveWaypoint(fromOffsets:toOffset:))
+                    .onDelete(perform: presenter.didDeleteWaypoint(_:))
+            }
         }
         .navigationTitle(Text(presenter.tripName))
         .navigationBarTitleDisplayMode(.inline)

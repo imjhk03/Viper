@@ -41,7 +41,10 @@ class TripDetailPresenter: ObservableObject {
     @Published var distanceLabel: String = "Calculationg..."
     @Published var waypoints: [Waypoint] = []
     
+    private let router: TripDetailRouter
+    
     init(interactor: TripDetailInteractor) {
+        self.router = TripDetailRouter(mapProvider: interactor.mapInfoProvider)
         self.interactor = interactor
         
         // 1 Creates a binding to set the trip name. The TextField will use this in the view to be able to read and write from the value.
@@ -72,5 +75,25 @@ class TripDetailPresenter: ObservableObject {
     
     func makeMapView() -> some View {
         TripMapView(presenter: TripMapViewPresenter(interactor: interactor))
+    }
+    
+    func addWaypoint() {
+        interactor.addWaypoint()
+    }
+    
+    func didMoveWaypoint(fromOffsets: IndexSet, toOffset: Int) {
+        interactor.moveWaypoint(fromOffsets: fromOffsets, toOffset: toOffset)
+    }
+    
+    func didDeleteWaypoint(_ atOffsets: IndexSet) {
+        interactor.deleteWaypoint(atOffsets: atOffsets)
+    }
+    
+    func cell(for waypoint: Waypoint) -> some View {
+        let destination = router.makeWaypointView(for: waypoint)
+            .onDisappear(perform: interactor.updateWaypoints)
+        return NavigationLink(destination: destination) {
+            Text(waypoint.name)
+        }
     }
 }
