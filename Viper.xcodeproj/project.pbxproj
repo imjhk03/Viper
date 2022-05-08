@@ -147,16 +147,8 @@
 				18D775C022AD944300AE281E /* AppDelegate.swift */,
 				18D775C222AD944300AE281E /* SceneDelegate.swift */,
 				18D775C422AD944300AE281E /* ContentView.swift */,
-				C1AA6DB5282819BD00386FD9 /* TripListInteractor.swift */,
-				C1AA6DB7282819EE00386FD9 /* TripListPresenter.swift */,
-				C1AA6DB928281B1300386FD9 /* TripListView.swift */,
-				C1AA6DC12828214C00386FD9 /* TripListRouter.swift */,
-				C1AA6DBB28281F4800386FD9 /* TripDetailPresenter.swift */,
-				C1AA6DBD28281F5100386FD9 /* TripDetailInteractor.swift */,
-				C1AA6DBF28281F6100386FD9 /* TripDetailView.swift */,
-				C1AA6DC728282C2A00386FD9 /* TripDetailRouter.swift */,
-				C1AA6DC32828286100386FD9 /* TripMapViewPresenter.swift */,
-				C1AA6DC52828294400386FD9 /* TripMapView.swift */,
+				C1AA6DC928282E5C00386FD9 /* TripListModule */,
+				C1AA6DCA28282E7900386FD9 /* TripDetailModule */,
 				0A8BE47C23ECC55F00C24F52 /* Functional Views */,
 				0A8BE47D23ECC56F00C24F52 /* Entities */,
 				0AEABEDA23EF7E1B00FD3972 /* Data Sources */,
@@ -176,6 +168,30 @@
 				18D775C922AD944400AE281E /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		C1AA6DC928282E5C00386FD9 /* TripListModule */ = {
+			isa = PBXGroup;
+			children = (
+				C1AA6DB5282819BD00386FD9 /* TripListInteractor.swift */,
+				C1AA6DB7282819EE00386FD9 /* TripListPresenter.swift */,
+				C1AA6DB928281B1300386FD9 /* TripListView.swift */,
+				C1AA6DC12828214C00386FD9 /* TripListRouter.swift */,
+			);
+			path = TripListModule;
+			sourceTree = "<group>";
+		};
+		C1AA6DCA28282E7900386FD9 /* TripDetailModule */ = {
+			isa = PBXGroup;
+			children = (
+				C1AA6DBB28281F4800386FD9 /* TripDetailPresenter.swift */,
+				C1AA6DBD28281F5100386FD9 /* TripDetailInteractor.swift */,
+				C1AA6DBF28281F6100386FD9 /* TripDetailView.swift */,
+				C1AA6DC728282C2A00386FD9 /* TripDetailRouter.swift */,
+				C1AA6DC32828286100386FD9 /* TripMapViewPresenter.swift */,
+				C1AA6DC52828294400386FD9 /* TripMapView.swift */,
+			);
+			path = TripDetailModule;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
