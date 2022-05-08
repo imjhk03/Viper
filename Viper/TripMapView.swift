@@ -26,51 +26,29 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import Foundation
 import SwiftUI
-import Combine
 
-class TripDetailPresenter: ObservableObject {
-    private let interactor: TripDetailInteractor
+struct TripMapView: View {
+    @ObservedObject var presenter: TripMapViewPresenter
     
-    private var cancellables = Set<AnyCancellable>()
-    
-    @Published var tripName: String = "No name"
-    let setTripName: Binding<String>
-    
-    @Published var distanceLabel: String = "Calculationg..."
-    @Published var waypoints: [Waypoint] = []
-    
-    init(interactor: TripDetailInteractor) {
-        self.interactor = interactor
-        
-        // 1 Creates a binding to set the trip name. The TextField will use this in the view to be able to read and write from the value.
-        setTripName = Binding<String>(
-            get: { interactor.tripName },
-            set: { interactor.setTripName($0) }
-        )
-        
-        // 2 Assigns the trip name from the interactor’s publisher to the tripName property of the presenter. This keeps the value synchronized.
-        interactor.tripNamePublisher
-            .assign(to: \.tripName, on: self)
-            .store(in: &cancellables)
-        
-        interactor.$totalDistance
-            .map { "Total Distance: " + MeasurementFormatter().string(from: $0) }
-            .replaceNil(with: "Calculationg...")
-            .assign(to: \.distanceLabel, on: self)
-            .store(in: &cancellables)
-        
-        interactor.$waypoints
-            .assign(to: \.waypoints, on: self)
-            .store(in: &cancellables)
-    }
-    
-    func save() {
-        interactor.save()
-    }
-    
-    func makeMapView() -> some View {
-        TripMapView(presenter: TripMapViewPresenter(interactor: interactor))
+    var body: some View {
+        MapView(pins: presenter.pins, routes: presenter.routes)
     }
 }
+
+#if DEBUG
+struct TripMapView_Previews: PreviewProvider {
+    static var previews: some View {
+        let model = DataModel.sample
+        let trip = model.trips[0]
+        let interactor = TripDetailInteractor(
+            trip: trip,
+            model: model,
+            mapInfoProvider: RealMapDataProvider())
+        let presenter = TripMapViewPresenter(interactor: interactor)
+        return VStack {
+            TripMapView(presenter: presenter)
+        }
+    }
+}
+#endif

@@ -36,6 +36,8 @@ struct TripDetailView: View {
             TextField("Trip Name", text: presenter.setTripName)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding([.horizontal])
+            presenter.makeMapView()
+            Text(presenter.distanceLabel)
         }
         .navigationTitle(Text(presenter.tripName))
         .navigationBarTitleDisplayMode(.inline)

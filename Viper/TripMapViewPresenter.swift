@@ -27,50 +27,32 @@
 /// THE SOFTWARE.
 
 import Foundation
-import SwiftUI
+import MapKit
 import Combine
 
-class TripDetailPresenter: ObservableObject {
-    private let interactor: TripDetailInteractor
+class TripMapViewPresenter: ObservableObject {
+    @Published var pins: [MKAnnotation] = []
+    @Published var routes: [MKRoute] = []
     
+    let interactor: TripDetailInteractor
     private var cancellables = Set<AnyCancellable>()
-    
-    @Published var tripName: String = "No name"
-    let setTripName: Binding<String>
-    
-    @Published var distanceLabel: String = "Calculationg..."
-    @Published var waypoints: [Waypoint] = []
     
     init(interactor: TripDetailInteractor) {
         self.interactor = interactor
         
-        // 1 Creates a binding to set the trip name. The TextField will use this in the view to be able to read and write from the value.
-        setTripName = Binding<String>(
-            get: { interactor.tripName },
-            set: { interactor.setTripName($0) }
-        )
-        
-        // 2 Assigns the trip name from the interactor’s publisher to the tripName property of the presenter. This keeps the value synchronized.
-        interactor.tripNamePublisher
-            .assign(to: \.tripName, on: self)
-            .store(in: &cancellables)
-        
-        interactor.$totalDistance
-            .map { "Total Distance: " + MeasurementFormatter().string(from: $0) }
-            .replaceNil(with: "Calculationg...")
-            .assign(to: \.distanceLabel, on: self)
-            .store(in: &cancellables)
-        
         interactor.$waypoints
-            .assign(to: \.waypoints, on: self)
+            .map {
+                $0.map {
+                    let annotation = MKPointAnnotation()
+                    annotation.coordinate = $0.location
+                    return annotation
+                }
+            }
+            .assign(to: \.pins, on: self)
             .store(in: &cancellables)
-    }
-    
-    func save() {
-        interactor.save()
-    }
-    
-    func makeMapView() -> some View {
-        TripMapView(presenter: TripMapViewPresenter(interactor: interactor))
+        
+        interactor.$directions
+            .assign(to: \.routes, on: self)
+            .store(in: &cancellables)
     }
 }
